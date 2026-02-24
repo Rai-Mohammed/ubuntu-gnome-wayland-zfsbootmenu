@@ -22,13 +22,15 @@ Bash script to install Ubuntu 25.10, Gnome DE, Wayland with ZFS on Root and ZFSB
    ```bash
    # Switch to a root shell
    user@ubuntu:~$ sudo -i
-   root@debian:~# bash
+   root@ubuntu:~# bash
 
    # Check available network interfaces
-   root@debian:~# ip addr show
+   root@ubuntu:~# ip addr show
 
+   # Step : Configure Netplan
+   
    # edit the network interfaces file to insure internet and Lan connectivities (Case of two network interfaces)
-   root@debian:~# nano /etc/netplan/00_--------config.yaml
+   root@ubuntu:~# nano /etc/netplan/00_--------config.yaml
    network:
     version: 2
     renderer: networkd
@@ -51,18 +53,36 @@ Bash script to install Ubuntu 25.10, Gnome DE, Wayland with ZFS on Root and ZFSB
             nameservers:
                 addresses: [8.8.4.4]
 
+   root@ubuntu:~# chmod 600 /etc/netplan/00_--------config.yaml
+   root@ubuntu:~# netplan generate
+   root@ubuntu:~# netplan apply || true
 
-   #----------------------------------
-   root@debian:~# systemctl restart networking.service
+   # Step : Define New Routing Tables
+   root@ubuntu:~# mkdir -p /etc/iproute2
+   root@ubuntu:~# touch /etc/iproute2/rt_tables
+   root@ubuntu:~# nano /etc/iproute2/rt_tables
+   1    table_net
+   2    table_hoa
+
+   # Step : Add Routes to the New Tables
+   root@ubuntu:~# ip route add default via 10.0.2.2 dev enp0s3 table table_net
+   root@ubuntu:~# ip route add default via 192.168.59.1 dev enp0s8 table table_hoa
+
+   # Step : Add Policy Routing Rules
+   root@ubuntu:~# ip rule add from 10.0.2.228/24 table tab
+   root@ubuntu:~# ip rule add from 192.168.59.228/24 table table_hoa
+
+   # Step : Verify Configuration
+   ip route flush cache
+   root@ubuntu:~# ip rule show
+   root@ubuntu:~# ip route show table table_net
+   root@ubuntu:~# ip route show table table_hoa
+
    # Do not test the connectivity by a ping, it doesn't work,
    # but you can update the system by "apt update && apt upgrade"
 
-   # Configure and update APT
-   root@debian:~# nano /etc/apt/sources.list
-   deb http://deb.debian.org/debian/ trixie main non-free non-free-firmware contrib
-   deb-src http://deb.debian.org/debian/ trixie main non-free non-free-firmware contrib
-
-   root@debian:~# apt update && apt upgrade
+   # Test update APT
+   root@ubuntu:~# apt update
    ```
 
 2. **Downloading the script and editing it**
@@ -71,12 +91,12 @@ Bash script to install Ubuntu 25.10, Gnome DE, Wayland with ZFS on Root and ZFSB
 
    ```bash   
    root@debian:~# apt install curl
-   root@debian:~# curl -O https://raw.githubusercontent.com/Rai-Mohammed/debian13-kde6-xorg-zfsbootmenu/main/debian13-kde6-xorg-zfsbootmenu.sh
+   root@debian:~# curl -O https://raw.githubusercontent.com/Rai-Mohammed/ubuntu-gnome-wayland-zfsbootmenu/main/ubuntu-gnome-wayland-zfsbootmenu.sh
 
    # Make the necessary changes to the installation script
-   root@debian:~# nano debian13-kde6-xorg-zfsbootmenu.sh
+   root@debian:~# nano ubuntu-gnome-wayland-zfsbootmenu.sh
 
-   root@debian:~# chmod +x debian13-kde6-xorg-zfsbootmenu.sh
-   root@debian:~# ./debian13-kde6-xorg-zfsbootmenu.sh
+   root@debian:~# chmod +x ubuntu-gnome-wayland-zfsbootmenu.sh
+   root@debian:~# ./ubuntu-gnome-wayland-zfsbootmenu.sh
    ```
 
