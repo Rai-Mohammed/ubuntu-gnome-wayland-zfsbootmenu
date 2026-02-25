@@ -269,7 +269,8 @@ apt install -y ethtool ifupdown tcpdump nmap nano htop openssh-server git tmux
 # Installing Gnome Desktop environment with Wayland and Support compatibility for running individual X11 applications
 echo "Installing Gnome Desktop environment with Wayland"
 echo "and Support compatibility for running individual X11 applications..."
-apt install -y ubuntu-desktop gnome-session gnome-session-common gnome-shell-ubuntu-extensions gnome-shell gnome-shell-common gnome-shell-extensions gnome-shell-extensions-common gnome-shell-extension-appindicator gnome-shell-extension-apps-menu gnome-shell-extension-auto-move-windows gnome-shell-extension-desktop-icons-ng apt install gnome-software gdm3 xwayland ubuntu-restricted-extras
+apt install -y ubuntu-desktop gnome-session gnome-session-common gnome-shell-ubuntu-extensions gnome-shell gnome-shell-common gnome-shell-extensions gnome-shell-extensions-common gnome-shell-extension-appindicator gnome-shell-extension-apps-menu gnome-shell-extension-auto-move-windows gnome-shell-extension-desktop-icons-ng 
+apt install -y gnome-software gdm3 xwayland ubuntu-restricted-extras network-manager-gnome
 
  systemctl start gdm3
  systemctl enable gdm3
