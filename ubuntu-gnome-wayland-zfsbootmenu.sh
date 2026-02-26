@@ -37,7 +37,7 @@ USER_PASSWORD="fill_your_user_password"
 ROOT_PASSWORD="fill_your_root_password"
 HOSTNAME="fill_your_hostname"
 
-IF_PHY_DNS="8.8.4.4"
+IF_PHY_DNS="8.8.8.8,8.8.4.4"
 
 IF_PHY_NET="enp0s3"
 IF_PHY_ADDRESS_NET="10.0.2.228"
@@ -50,24 +50,6 @@ IF_PHY_NETMASK_HOA="24"
 IF_PHY_GATEWAY_HOA="192.168.59.1"
 #----------------------------------
 # From : https://docs.zfsbootmenu.org/en/latest/guides/ubuntu/uefi.html#
-
-# Configure apt sources outof Chroot
-
-    cat  > /etc/apt/sources.list <<EOF_APT_OUT_CHROOT
-    deb ${APT_MIRROR} $OS_DISTRIBUTION main restricted universe multiverse
-    deb-src ${APT_MIRROR} $OS_DISTRIBUTION main restricted universe multiverse
-
-    deb ${APT_MIRROR} $OS_DISTRIBUTION-security main restricted universe multiverse
-    deb-src ${APT_MIRROR} $OS_DISTRIBUTION-security main restricted universe multiverse
-
-    # $OS_DISTRIBUTION-updates, to get updates before a point release is made
-    deb ${APT_MIRROR} $OS_DISTRIBUTION-updates main restricted universe multiverse
-    deb-src ${APT_MIRROR} $OS_DISTRIBUTION-updates main restricted universe multiverse
-
-    deb ${APT_MIRROR} $OS_DISTRIBUTION-backports main restricted universe multiverse
-
-    # pre-release repository : dedeb-srcb ${APT_MIRROR} $OS_DISTRIBUTION-backports main contrib main restricted universe multiverse
-EOF_APT_OUT_CHROOT
 
 # Install helpers
 apt install -y debootstrap parted gdisk shim-signed mokutil dkms zfs-dkms zfsutils-linux
@@ -99,6 +81,9 @@ sgdisk -n "${SWAP_PART}:0:+12G" -t "${SWAP_PART}:8200" -c "${SWAP_PART}:Linux Ub
 
 # Create zpool partition
 sgdisk -n "${POOL_PART}:0:-10m" -t "${POOL_PART}:bf00" -c "${POOL_PART}:Ubuntu ZFS zroot Partition" "$POOL_DISK"
+
+# Verify your target disk devices with lsblk
+lsblk
 
 # ZFS verification
 zpool status
@@ -298,7 +283,8 @@ apt install -y ethtool ifupdown tcpdump nmap nano htop openssh-server git tmux
 # Installing Gnome Desktop environment with Wayland and Support compatibility for running individual X11 applications
 echo "Installing Gnome Desktop environment with Wayland"
 echo "and Support compatibility for running individual X11 applications..."
-apt install -y ubuntu-desktop gdm3 xwayland ubuntu-restricted-extras network-manager-gnome
+apt install -y ubuntu-desktop gdm3 xwayland ubuntu-restricted-extras network-manager-gnome snapd
+snap install -y snap-store 
 
  systemctl start gdm3
  systemctl enable gdm3
