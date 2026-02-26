@@ -49,16 +49,28 @@ IF_PHY_ADDRESS_HOA="192.168.59.228"
 IF_PHY_NETMASK_HOA="24"
 IF_PHY_GATEWAY_HOA="192.168.59.1"
 #----------------------------------
-# From : https://docs.zfsbootmenu.org/en/latest/guides/debian/uefi.html#
-# Install helpers
-apt install -y --no-install-recommends locales tzdata keyboard-configuration console-setup
+# From : https://docs.zfsbootmenu.org/en/latest/guides/ubuntu/uefi.html#
 
-# Note : You should always enable the en_US.UTF-8 locale because some programs require it.
-echo "Configure packages to customize local and console properties..."
-dpkg-reconfigure locales tzdata keyboard-configuration console-setup
+# Configure apt sources outof Chroot
+
+    cat  > /etc/apt/sources.list <<EOF_APT_OUT_CHROOT
+    deb ${APT_MIRROR} $OS_DISTRIBUTION main restricted universe multiverse
+    deb-src ${APT_MIRROR} $OS_DISTRIBUTION main restricted universe multiverse
+
+    deb ${APT_MIRROR} $OS_DISTRIBUTION-security main restricted universe multiverse
+    deb-src ${APT_MIRROR} $OS_DISTRIBUTION-security main restricted universe multiverse
+
+    # $OS_DISTRIBUTION-updates, to get updates before a point release is made
+    deb ${APT_MIRROR} $OS_DISTRIBUTION-updates main restricted universe multiverse
+    deb-src ${APT_MIRROR} $OS_DISTRIBUTION-updates main restricted universe multiverse
+
+    deb ${APT_MIRROR} $OS_DISTRIBUTION-backports main restricted universe multiverse
+
+    # pre-release repository : dedeb-srcb ${APT_MIRROR} $OS_DISTRIBUTION-backports main contrib main restricted universe multiverse
+EOF_APT_OUT_CHROOT
 
 # Install helpers
-apt install -y debootstrap parted gdisk dkms zfs-dkms zfsutils-linux
+apt install -y debootstrap parted gdisk shim-signed mokutil dkms zfs-dkms zfsutils-linux
 
 # Generate /etc/hostid
 zgenhostid -f
@@ -187,9 +199,9 @@ cat /etc/passwd | grep $USERNAME
 #For a more automated and robust solution, use mkhomedir_helper if available
 
 
-# Configure apt sources
+# Configure apt sources inside Chroot
 
-    cat  > /etc/apt/sources.list <<EOF_APT
+    cat  > /etc/apt/sources.list <<EOF_APT_CHROOTED
     deb ${APT_MIRROR} $OS_DISTRIBUTION main restricted universe multiverse
     deb-src ${APT_MIRROR} $OS_DISTRIBUTION main restricted universe multiverse
 
@@ -203,7 +215,7 @@ cat /etc/passwd | grep $USERNAME
     deb ${APT_MIRROR} $OS_DISTRIBUTION-backports main restricted universe multiverse
 
     # pre-release repository : dedeb-srcb ${APT_MIRROR} $OS_DISTRIBUTION-backports main contrib main restricted universe multiverse
-EOF_APT
+EOF_APT_CHROOTED
 
 cat /etc/apt/sources.list
 
@@ -220,7 +232,7 @@ dpkg-reconfigure locales tzdata keyboard-configuration console-setup
 
 # ZFS Configuration - Install required packages
 
-apt install -y gdisk dkms zfs-dkms zfsutils-linux zfs-initramfs
+apt install -y gdisk parted shim-signed mokutil dkms zfs-dkms zfsutils-linux zfs-initramfs
 
 apt install -y dosfstools efibootmgr curl ubuntu-server mc openssh-server
 # Depricated  # echo "REMAKE_INITRD=yes" > /etc/dkms/zfs.conf
