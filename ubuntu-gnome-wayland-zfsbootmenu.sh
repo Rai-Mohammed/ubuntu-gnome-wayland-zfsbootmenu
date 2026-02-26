@@ -99,7 +99,7 @@ zpool create -f -o ashift=12 \
  -O acltype=posixacl \
  -O xattr=sa \
  -O relatime=on \
- -m none $ZPOOL_NAME $POOL_DEVICE
+ -m none "$ZPOOL_NAME" "$POOL_DEVICE"
 
 zpool status
 # Create initial file systems
@@ -110,7 +110,7 @@ zpool status
 
  zfs create -o mountpoint=/home $ZPOOL_NAME/home
 
- zfs create -o mountpoint=/home/$USERNAME $ZPOOL_NAME/home_$USERNAME
+ zfs create -o mountpoint=/home/$USERNAME $ZPOOL_NAME/home/$USERNAME
 
  zpool set bootfs=$ZPOOL_NAME/ROOT/$OS_ID $ZPOOL_NAME
 
@@ -120,7 +120,7 @@ zpool status
  zpool import -N -R $MOUNT_POINT $ZPOOL_NAME
  zfs mount $ZPOOL_NAME/ROOT/$OS_ID
  zfs mount $ZPOOL_NAME/home
- zfs mount $ZPOOL_NAME/home_$USERNAME
+ zfs mount $ZPOOL_NAME/home/$USERNAME
 
 # Verify that everything is mounted correctly
 mount | grep mnt
@@ -219,7 +219,7 @@ dpkg-reconfigure locales tzdata keyboard-configuration console-setup
 
 apt install -y gdisk parted shim-signed mokutil dkms zfs-dkms zfsutils-linux zfs-initramfs
 
-apt install -y dosfstools efibootmgr curl ubuntu-server mc openssh-server
+apt install -y dosfstools efibootmgr curl mc openssh-server    # Not a server (ubuntu-server)
 # Depricated  # echo "REMAKE_INITRD=yes" > /etc/dkms/zfs.conf
 
 # Enable systemd ZFS services
@@ -283,6 +283,7 @@ apt install -y ethtool ifupdown tcpdump nmap nano htop openssh-server git tmux
 # Installing Gnome Desktop environment with Wayland and Support compatibility for running individual X11 applications
 echo "Installing Gnome Desktop environment with Wayland"
 echo "and Support compatibility for running individual X11 applications..."
+export DEBIAN_FRONTEND=noninteractive
 apt install -y ubuntu-desktop gdm3 xwayland ubuntu-restricted-extras network-manager-gnome snapd
 snap install -y snap-store 
 
