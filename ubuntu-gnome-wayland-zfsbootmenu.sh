@@ -293,7 +293,9 @@ echo "Installing Gnome Desktop environment with Wayland"
 echo "and Support compatibility for running individual X11 applications..."
 
 export DEBIAN_FRONTEND=noninteractive
-apt install -y ubuntu-desktop gdm3 xwayland ubuntu-restricted-extras network-manager-gnome snapd gnome-shell-extensions
+apt install -y ubuntu-desktop gdm3 xwayland ubuntu-restricted-extras network-manager-gnome snapd 
+apt install -y gnome-shell-extensions gnome-tweaks gir1.2-messagingmenu-1.0
+gnome-extensions enable apps-menu@gnome-shell-extensions.gcampax.github.com
 
 usermod -aG sudo,audio,cdrom,dip,floppy,plugdev,operator,netdev,video $USERNAME
 export DEBIAN_FRONTEND=interactive
