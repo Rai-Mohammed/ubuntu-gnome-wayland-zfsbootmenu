@@ -159,7 +159,7 @@ echo "root:$ROOT_PASSWORD" | chpasswd
 # Create user and set password
 echo "Creating user and setting permissions..."
 useradd $USERNAME --shell /bin/bash --home /home/$USERNAME 
-usermod -aG sudo,audio,cdrom,dip,floppy,plugdev,operator,netdev,video $USERNAME
+usermod -aG sudo,audio,cdrom,dip,floppy,plugdev,operator,netdev,video,render $USERNAME
 echo "$USERNAME:$USER_PASSWORD" | chpasswd
 
 # Check if the directory exists and confirm the user''s settings.
@@ -297,7 +297,7 @@ apt install -y ubuntu-desktop gdm3 xwayland ubuntu-restricted-extras network-man
 apt install -y gnome-shell-extensions gnome-tweaks gir1.2-messagingmenu-1.0
 gnome-extensions enable apps-menu@gnome-shell-extensions.gcampax.github.com
 
-usermod -aG sudo,audio,cdrom,dip,floppy,plugdev,operator,netdev,video $USERNAME
+usermod -aG sudo,audio,cdrom,dip,floppy,plugdev,operator,netdev,video,render $USERNAME
 export DEBIAN_FRONTEND=interactive
 sudo su $USERNAME -c "snap install snap-store bare core22 core24 gnome-42-2204 desktop-security-center firefox firmware-updater gtk-common-themes"
 
