@@ -296,8 +296,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt install -y kde-plasma-desktop ubuntu-restricted-extras dbus-x11 libreoffice libreoffice-qt6
 apt install -y hunspell-ar hunspell-en-us hunspell-fr libreoffice-help-en-us libreoffice-help-fr libreoffice-l10n-ar libreoffice-l10n-fr hyphen-en-us hyphen-fr snapd 
 
-# Configure apt sources inside Chroot
-
+# Configure libreoffice variables
     cat  > /usr/bin/libreoffice <<EOF_APT_LIBREOFFICE
     # For libreoffice-qt6 plugin
     SAL_USE_VCLPLUGIN=qt6
@@ -307,6 +306,9 @@ apt install -y hunspell-ar hunspell-en-us hunspell-fr libreoffice-help-en-us lib
     SAL_FORCEDPI=120
     export SAL_FORCEDPI
 EOF_APT_LIBREOFFICE
+
+# Config IBus input method framework - setting X11-specific environment variables
+
     
 # Creating ~/.xinitrc to explicitly launch KDE with a D-Bus session:
 echo "Creating /home/$USERNAME/.xinitrc to explicitly launch KDE with a D-Bus session..."
