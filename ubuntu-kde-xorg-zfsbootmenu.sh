@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Bash script to install Ubuntu 25.10, Gnome DE, Wayland with ZFS on Root and ZFSBootMenu
+# Bash script to install Ubuntu 25.10, KDE Plasma 6 DE, Xorg with ZFS on Root and ZFSBootMenu
 
 # Automatically set other variables
 PHY_DRIVE="/dev/sda"
@@ -144,7 +144,7 @@ mount -B /dev $MOUNT_POINT/dev
 mount -t devpts pts $MOUNT_POINT/dev/pts
 
 chroot $MOUNT_POINT /bin/bash <<EOF_CHROOT
-# Basic Debian Configuration
+# Basic Ubuntu Configuration
 # Set a hostname
 
 echo "$HOSTNAME" > /etc/hostname
@@ -171,7 +171,7 @@ cat /etc/passwd | grep $USERNAME
 
 # Set correct ownership and permissions.
 # The home directory must be owned by the user.
-#  chown $USERNAME:$USERNAME /home/$USERNAME
+chown -R $USERNAME:$USERNAME /home/$USERNAME
 
 # The user needs permission to enter the directory. The 755 permission is a good default, which allows the owner to read, write, and execute, and others to read and execute.
 #  chmod 755 /home/$USERNAME
@@ -219,7 +219,7 @@ dpkg-reconfigure locales tzdata keyboard-configuration console-setup
 
 apt install -y gdisk parted shim-signed mokutil dkms zfs-dkms zfsutils-linux zfs-initramfs
 
-apt install -y dosfstools efibootmgr curl mc openssh-server    # Not a server (ubuntu-server)
+apt install -y dosfstools efibootmgr curl mc openssh-server fonts-ubuntu-console ubuntu-standard  # Not a server (ubuntu-server)
 # Depricated  # echo "REMAKE_INITRD=yes" > /etc/dkms/zfs.conf
 
 # Enable systemd ZFS services
@@ -288,22 +288,25 @@ echo "Installing system utilities..."
 apt install -y systemd-timesyncd net-tools iproute2 isc-dhcp-client iputils-ping traceroute curl wget dnsutils
 apt install -y ethtool ifupdown tcpdump nmap nano htop openssh-server git tmux
 
-# Installing Gnome Desktop environment with Wayland and Support compatibility for running individual X11 applications
-echo "Installing Gnome Desktop environment with Wayland"
+# Installing KDE Plasma 6 Desktop environment with Xorg and Support compatibility for running individual X11 applications
+echo "Installing  KDE Plasma 6 Desktop environment with Xorg"
 echo "and Support compatibility for running individual X11 applications..."
 
 export DEBIAN_FRONTEND=noninteractive
-apt install -y ubuntu-desktop gdm3 xwayland ubuntu-restricted-extras network-manager-gnome snapd 
-apt install -y gnome-shell-extensions gnome-tweaks gir1.2-messagingmenu-1.0
-gnome-extensions enable apps-menu@gnome-shell-extensions.gcampax.github.com
+apt install -y kde-plasma-desktop ubuntu-restricted-extras dbus-x11 snapd 
+
+# Creating ~/.xinitrc to explicitly launch KDE with a D-Bus session:
+echo "Creating /home/$USERNAME/.xinitrc to explicitly launch KDE with a D-Bus session..."
+echo 'exec dbus-launch --exit-with-session startplasma-x11' > /home/$USERNAME/.xinitrc
+chmod +x ~/.xinitrc
 
 usermod -aG sudo,audio,cdrom,dip,floppy,plugdev,operator,netdev,video,render $USERNAME
 export DEBIAN_FRONTEND=interactive
-sudo su $USERNAME -c "snap install snap-store bare core22 core24 gnome-42-2204 desktop-security-center firefox firmware-updater gtk-common-themes"
+sudo su $USERNAME -c "snap install bare core22 core24"
 
- systemctl start gdm3
- systemctl enable gdm3
- systemctl status gdm3
+ systemctl start sddm
+ systemctl enable sddm
+ systemctl status sddm
  
 export DEBIAN_FRONTEND=noninteractive
 
