@@ -326,9 +326,13 @@ usermod -aG sudo,audio,cdrom,dip,floppy,plugdev,operator,netdev,video,render $US
 export DEBIAN_FRONTEND=interactive
 sudo su $USERNAME -c "snap install bare core18 core20 core22 core24 mesa-2404 telegram-desktop"
 
- systemctl start sddm
- systemctl enable sddm
- systemctl status sddm
+systemctl start sddm
+systemctl enable sddm
+systemctl status sddm
+
+systemctl start dbus
+systemctl enable dbus
+systemctl status dbus
  
 export DEBIAN_FRONTEND=noninteractive
 
