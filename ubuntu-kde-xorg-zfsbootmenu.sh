@@ -297,7 +297,7 @@ apt install -y kde-plasma-desktop ubuntu-restricted-extras dbus-x11 libreoffice 
 apt install -y hunspell-ar hunspell-en-us hunspell-fr libreoffice-help-en-us libreoffice-help-fr libreoffice-l10n-ar libreoffice-l10n-fr hyphen-en-us hyphen-fr snapd 
 
 # Configure libreoffice variables
-    cat  > /usr/bin/libreoffice <<EOF_APT_LIBREOFFICE
+    cat  > /usr/bin/libreoffice <<EOF_LIBREOFFICE
     # For libreoffice-qt6 plugin
     SAL_USE_VCLPLUGIN=qt6
     export SAL_USE_VCLPLUGIN
@@ -305,10 +305,15 @@ apt install -y hunspell-ar hunspell-en-us hunspell-fr libreoffice-help-en-us lib
     # Increse the resolustion of libreoffice
     SAL_FORCEDPI=120
     export SAL_FORCEDPI
-EOF_APT_LIBREOFFICE
+EOF_LIBREOFFICE
 
 # Config IBus input method framework - setting X11-specific environment variables
-
+touch /etc/environment.d/99-ibus.conf
+    cat  > /etc/environment.d/99-ibus.conf <<EOF_IBUS_ENV
+    # Unset legacy IBus variables for Wayland
+    GTK_IM_MODULE=
+    QT_IM_MODULE=
+EOF_IBUS_ENV
     
 # Creating ~/.xinitrc to explicitly launch KDE with a D-Bus session:
 echo "Creating /home/$USERNAME/.xinitrc to explicitly launch KDE with a D-Bus session..."
@@ -329,6 +334,8 @@ export DEBIAN_FRONTEND=noninteractive
 echo "Installing IDE Pycharm-Community..."
 
 
+# Installing Virtual Studio Code | VSCode Installation Instructions : 
+echo "Installing Virtual Studio Code..."
 
 # Configure Ubuntu Networking
 
