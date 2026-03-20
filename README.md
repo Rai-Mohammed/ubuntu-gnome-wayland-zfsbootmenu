@@ -90,13 +90,13 @@ Bash script to install Ubuntu 25.10, KDE Plasma 6 DE, Xorg with ZFS on Root and 
    Run the following to start the script
 
    ```bash   
-   root@debian:~# apt install curl
-   root@debian:~# curl -O https://raw.githubusercontent.com/Rai-Mohammed/ubuntu-kde-xorg-zfsbootmenu/main/ubuntu-kde-xorg-zfsbootmenu.sh
+   root@ubuntu:~# apt install curl
+   root@ubuntu:~# curl -O https://raw.githubusercontent.com/Rai-Mohammed/ubuntu-kde-xorg-zfsbootmenu/main/ubuntu-kde-xorg-zfsbootmenu.sh
 
    # Make the necessary changes to the installation script
-   root@debian:~# nano ubuntu-kde-xorg-zfsbootmenu.sh
+   root@ubuntu:~# nano ubuntu-kde-xorg-zfsbootmenu.sh
 
-   root@debian:~# chmod +x ubuntu-kde-xorg-zfsbootmenu.sh
-   root@debian:~# ./ubuntu-gnome-wayland-zfsbootmenu.sh
+   root@ubuntu:~# chmod +x ubuntu-kde-xorg-zfsbootmenu.sh
+   root@ubuntu:~# ./ubuntu-kde-xorg-zfsbootmenu.sh
    ```
 
