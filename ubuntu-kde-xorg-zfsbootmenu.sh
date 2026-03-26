@@ -324,7 +324,7 @@ chmod +x ~/.xinitrc
 
 usermod -aG sudo,audio,cdrom,dip,floppy,plugdev,operator,netdev,video,render $USERNAME
 export DEBIAN_FRONTEND=interactive
-sudo su $USERNAME -c "snap install bare core18 core20 core22 core24 mesa-2404 telegram-desktop"
+su $USERNAME -c "snap install bare core18 core20 core22 core24 mesa-2404 telegram-desktop"
 
 systemctl start sddm
 systemctl enable sddm
