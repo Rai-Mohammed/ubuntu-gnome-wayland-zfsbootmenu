@@ -295,7 +295,7 @@ echo "Installing  KDE Plasma 6 Desktop environment with Xorg"
 echo "and Support compatibility for running individual X11 applications..."
 
 export DEBIAN_FRONTEND=noninteractive
-apt install -y kde-plasma-desktop ubuntu-restricted-extras dbus-x11 libreoffice libreoffice-qt6
+apt install -y kde-plasma-desktop ubuntu-restricted-extras dbus-x11 libreoffice libreoffice-qt6 libavcodec-extra
 apt install -y hunspell-ar hunspell-en-us hunspell-fr libreoffice-help-en-us libreoffice-help-fr libreoffice-l10n-ar libreoffice-l10n-fr hyphen-en-us hyphen-fr snapd 
 
 # Configure libreoffice variables
