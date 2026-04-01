@@ -229,6 +229,8 @@ systemctl enable zfs-import-cache
 systemctl enable zfs-mount
 systemctl enable zfs-import.target
 systemctl enable zfs-import-scan
+systemctl enable zfs-share 
+systemctl enable zfs-zed
 
 # Configure initramfs-tools
 # Unencrypted No required steps
